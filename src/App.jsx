@@ -12,9 +12,13 @@ import { PwaInstallProvider } from './contexts/PwaInstallContext';
 import styles from './App.module.scss';
 import './index.css';
 import { requestNotificationPermission, setupMessaging } from './services/firebase';
+import { registerServiceWorker } from './registerServiceWorker';
 
 function App() {
   useEffect(() => {
+    // Register service worker on component mount
+    registerServiceWorker();
+
     // Initialize FCM
     const initializeFCM = async () => {
       try {

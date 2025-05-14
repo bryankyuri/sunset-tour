@@ -1,78 +1,69 @@
 import { useState, useEffect } from 'react';
 import './DevTools.css';
+import { getMessaging, getToken } from 'firebase/messaging';
+import { firebaseApp } from '../firebase/firebaseConfig'; // Adjust path as needed
 
 function DevTools() {
   const [isOpen, setIsOpen] = useState(false);
   const [deviceId, setDeviceId] = useState('Loading...');
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [deviceInfo, setDeviceInfo] = useState({});
 
-  // Function to get the current FCM token
   const updateDeviceId = async () => {
     try {
-      // Try different storage locations where the FCM token might be stored
-      let token = localStorage.getItem('fcmToken') || 
-                  localStorage.getItem('fcm_token') || 
-                  sessionStorage.getItem('fcmToken');
+      // Device detection
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isPWA = window.matchMedia('(display-mode: standalone)').matches;
       
-      // If we find a token, use it
-      if (token) {
-        setDeviceId(token);
+      setDeviceInfo({
+        userAgent: navigator.userAgent,
+        isIOS,
+        isPWA,
+        mode: isPWA ? 'standalone' : 'browser'
+      });
+
+      // Try to get token from various storage methods
+      let fcmToken = localStorage.getItem('fcmToken') || 
+                     sessionStorage.getItem('fcmToken');
+      
+      if (fcmToken) {
+        setDeviceId(fcmToken);
         return;
       }
       
-      // If the token is stored in indexedDB
-      if ('indexedDB' in window) {
-        // This is a simplified approach - you might need to adjust based on your DB structure
+      // Direct Firebase method for getting current token
+      if ('Notification' in window && navigator.serviceWorker) {
         try {
-          const db = await new Promise((resolve, reject) => {
-            const request = indexedDB.open('firebaseLocalStorageDb');
-            request.onerror = reject;
-            request.onsuccess = () => resolve(request.result);
+          const messaging = getMessaging(firebaseApp);
+          const currentToken = await getToken(messaging, { 
+            vapidKey: 'YOUR_VAPID_KEY_HERE' 
           });
           
-          const transaction = db.transaction(['firebaseLocalStorage'], 'readonly');
-          const store = transaction.objectStore('firebaseLocalStorage');
-          const allRecords = await new Promise((resolve) => {
-            const request = store.getAll();
-            request.onsuccess = () => resolve(request.result);
-          });
-          
-          // Find FCM token in stored data
-          const fcmTokenObj = allRecords.find(item => 
-            item.value && typeof item.value === 'object' && item.value.token);
-          
-          if (fcmTokenObj?.value?.token) {
-            setDeviceId(fcmTokenObj.value.token);
+          if (currentToken) {
+            // Save token for future use
+            localStorage.setItem('fcmToken', currentToken);
+            setDeviceId(currentToken);
             return;
           }
-        } catch (err) {
-          console.log('IndexedDB error:', err);
+        } catch (firebaseError) {
+          console.log('Firebase token error:', firebaseError);
         }
       }
       
-      setDeviceId('Device ID not found - Check application storage');
+      setDeviceId('FCM Token not found - Make sure notifications are enabled');
     } catch (error) {
-      console.error('Error getting device ID:', error);
-      setDeviceId('Error retrieving device ID');
+      console.error('Error fetching device ID:', error);
+      setDeviceId('Error retrieving FCM token');
     }
   };
 
   useEffect(() => {
     updateDeviceId();
-    
-    // Set up listener for storage changes
-    const handleStorageChange = () => updateDeviceId();
-    window.addEventListener('storage', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [refreshKey]);
+  }, []);
 
   return (
     <>
       <button 
-        className="devtools-button scale-75"
+        className="devtools-button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Developer Tools"
       >
@@ -89,13 +80,19 @@ function DevTools() {
             <button onClick={() => setIsOpen(false)}>×</button>
           </div>
           <div className="devtools-popup-content">
-            <h4>Device ID (FCM Token)</h4>
+            <h4>Device Info</h4>
+            <div className="device-info">
+              <p>iOS: {deviceInfo.isIOS ? 'Yes' : 'No'}</p>
+              <p>PWA Mode: {deviceInfo.isPWA ? 'Yes' : 'No'}</p>
+            </div>
+            
+            <h4>FCM Token</h4>
             <div className="device-id-container">
               <p className="device-id">{deviceId}</p>
               <button 
                 onClick={() => {
                   navigator.clipboard.writeText(deviceId);
-                  alert('Device ID copied to clipboard!');
+                  alert('FCM Token copied to clipboard!');
                 }}
               >
                 Copy
@@ -103,9 +100,9 @@ function DevTools() {
             </div>
             <button 
               className="refresh-button" 
-              onClick={() => setRefreshKey(prev => prev + 1)}
+              onClick={updateDeviceId}
             >
-              Refresh
+              Refresh Token
             </button>
           </div>
         </div>
