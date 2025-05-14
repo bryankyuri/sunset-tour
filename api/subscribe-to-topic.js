@@ -26,7 +26,7 @@ function getFirebaseMessaging() {
   return messaging;
 }
 
-export const handler = async function(req, res) {
+export default async function(req, res) {
   try {
     const { token, topic } = req.body;
     
@@ -45,4 +45,4 @@ export const handler = async function(req, res) {
     console.error('Error subscribing to topic:', error);
     return res.status(500).json({ error: error.message || 'Failed to subscribe to topic' });
   }
-};
+}
