@@ -64,7 +64,7 @@ export const subscribeToAllUsersTopic = async (token) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ token })
+      body: JSON.stringify({ token: token, topic: 'all-users' })
     });
     
     // Check if the request was successful
