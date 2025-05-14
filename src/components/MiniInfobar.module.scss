@@ -1,0 +1,41 @@
+// src/components/MiniInfobar.module.scss
+.miniInfobar {
+  @apply fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg 
+    flex items-center w-11/12 max-w-md z-50 border border-gray-200 overflow-hidden;
+  animation: slideUp 0.3s ease-out;
+  
+  .iconContainer {
+    @apply p-3 flex-shrink-0 bg-gray-100;
+    
+    .appIcon {
+      @apply w-8 h-8 rounded;
+    }
+  }
+  
+  .content {
+    @apply flex-grow px-3 py-2;
+    
+    p {
+      @apply text-sm text-gray-800 font-medium;
+    }
+  }
+  
+  .actions {
+    @apply flex items-center;
+    
+    .installButton {
+      @apply mr-1 bg-[#fab978] text-white text-sm font-medium py-1 px-4
+        rounded hover:bg-[#e9a867] transition-colors;
+    }
+    
+    .closeButton {
+      @apply mx-2 text-gray-400 hover:text-gray-600 p-1 rounded-full
+        hover:bg-gray-100 transition-colors;
+    }
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}

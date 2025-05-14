@@ -1,0 +1,10 @@
+// src/components/InstallButton.module.scss
+.installButton {
+  @apply fixed top-20 right-4 bg-[#fab978] text-white font-medium py-2 px-4 
+    rounded-full shadow-lg flex items-center gap-2 z-40 hover:bg-[#e9a867] 
+    transition-colors duration-300;
+  
+  svg {
+    @apply stroke-current;
+  }
+}
