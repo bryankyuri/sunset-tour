@@ -1,7 +1,9 @@
 // api/subscribe-to-topic.js (Vercel serverless function)
-const { initializeApp, cert } = require('firebase-admin/app');
-const { getMessaging } = require('firebase-admin/messaging');
-require('dotenv').config(); // Make sure this is included
+import { initializeApp, cert } from 'firebase-admin/app';
+import { getMessaging } from 'firebase-admin/messaging';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 let messaging;
 
@@ -24,7 +26,7 @@ function getFirebaseMessaging() {
   return messaging;
 }
 
-exports.handler = async function(req, res) {
+export const handler = async function(req, res) {
   try {
     const { token, topic } = req.body;
     
