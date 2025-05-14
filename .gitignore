@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 serviceAccountKey.json
-
+generate-fcm-token.cjs
 # Dependencies
 node_modules
 .pnp
