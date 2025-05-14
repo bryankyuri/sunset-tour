@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Path to your service account key file
-const keyFilePath = path.join(__dirname, 'serviceAccountKey.json');
+const keyFilePath = path.join(__dirname, '');
 
 async function getAccessToken() {
   try {
