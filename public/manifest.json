@@ -1,27 +1,44 @@
 {
-  "name": "React Vite PWA",
-  "short_name": "Vite PWA",
-  "description": "A Progressive Web App built with React and Vite.",
-  "start_url": ".",
-  "display": "standalone",
+  "name": "Sunset Tour",
+  "short_name": "Sunset Tour",
+  "description": "Explore beautiful sunset tours around the world",
+  "theme_color": "#fab978",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "Logo/android/android-launchericon-192-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "images/icon-192x192.png",
+      "src": "Logo/android/android-launchericon-512-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "192x192"
+      "purpose": "any"
     },
     {
-      "src": "images/icon-512x512.png",
+      "src": "Logo/android/android-launchericon-512-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "maskable"
+    },
+    {
+      "src": "Logo/ios/180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "apple touch icon"
     }
   ],
-  "gcm_sender_id": "950508827617"
+  "id": "sunset-tour",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "gcm_sender_id": "950508827617",
+  "apple-mobile-web-app-capable": "yes",
+  "apple-mobile-web-app-status-bar-style": "black-translucent",
+  "apple-mobile-web-app-title": "Sunset Tour"
 }
