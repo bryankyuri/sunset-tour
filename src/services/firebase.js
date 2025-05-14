@@ -51,33 +51,36 @@ export const subscribeToAllUsersTopic = async (token) => {
   try {
     // Check if we're in development
     const isDev = import.meta.env.DEV;
-    
+
     if (isDev) {
       // In development, just log and return success
-      console.log('[DEV] Would subscribe token to all-users topic:', token);
+      console.log("[DEV] Would subscribe token to all-users topic:", token);
       return true;
     }
-    
+
     // In production, call the API endpoint
-    const response = await fetch('/api/subscribe-to-topic', {
-      method: 'POST',
+    const response = await fetch("/api/subscribe-to-topic", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token: token, topic: 'all-users' })
+      body: JSON.stringify({
+        token: token, // Use the token parameter passed to the function
+        topic: "all-users", // Use your actual topic name
+      }),
     });
-    
+
     // Check if the request was successful
     if (response.ok) {
       const result = await response.json();
-      console.log('Successfully subscribed to all-users topic');
+      console.log("Successfully subscribed to all-users topic");
       return true;
     } else {
-      console.error('Failed to subscribe to topic:', await response.text());
+      console.error("Failed to subscribe to topic:", await response.text());
       return false;
     }
   } catch (error) {
-    console.error('Error subscribing to topic:', error);
+    console.error("Error subscribing to topic:", error);
     return false;
   }
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './DevTools.css';
 import { getMessaging, getToken } from 'firebase/messaging';
-import { firebaseApp } from '../firebase/firebaseConfig'; // Adjust path as needed
+import { requestNotificationPermission } from '../services/firebase';
 
 function DevTools() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,25 +23,21 @@ function DevTools() {
 
       // Try to get token from various storage methods
       let fcmToken = localStorage.getItem('fcmToken') || 
-                     sessionStorage.getItem('fcmToken');
+                    sessionStorage.getItem('fcmToken');
       
       if (fcmToken) {
         setDeviceId(fcmToken);
         return;
       }
       
-      // Direct Firebase method for getting current token
+      // If token not found in storage, request it
       if ('Notification' in window && navigator.serviceWorker) {
         try {
-          const messaging = getMessaging(firebaseApp);
-          const currentToken = await getToken(messaging, { 
-            vapidKey: 'YOUR_VAPID_KEY_HERE' 
-          });
+          // Use your existing function to get token
+          const token = await requestNotificationPermission();
           
-          if (currentToken) {
-            // Save token for future use
-            localStorage.setItem('fcmToken', currentToken);
-            setDeviceId(currentToken);
+          if (token) {
+            setDeviceId(token);
             return;
           }
         } catch (firebaseError) {
