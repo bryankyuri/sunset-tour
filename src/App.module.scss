@@ -1,0 +1,10 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  :global {
+    .swiper-pagination-bullet.swiper-pagination-bullet-active {
+      background: #fab978 !important;
+    }
+  }
+}

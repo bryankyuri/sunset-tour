@@ -1,0 +1,217 @@
+.tourDetail {
+  @apply min-h-screen flex flex-col;
+  
+  .loading, .error {
+    @apply text-center py-20 text-lg;
+  }
+  
+  .hero {
+    @apply relative h-[400px] bg-cover bg-center;
+    
+    .overlay {
+      @apply absolute inset-0 bg-black bg-opacity-40;
+    }
+     .backLink {
+        @apply mb-4 top-0 absolute p-6;
+        
+        a {
+          @apply text-white hover:text-gray-200 font-medium flex items-center transition-colors;
+          &:hover {
+            @apply underline;
+          }
+        }
+      }
+    
+    .heroContent {
+      @apply absolute bottom-0 left-0 p-6 text-white;
+      
+     
+      
+      .rating {
+        @apply inline-block bg-white text-gray-800 px-2 py-1 rounded-md mb-2 font-medium;
+      }
+      
+      h1 {
+        @apply text-4xl font-bold;
+      }
+    }
+  }
+  
+  .contentGrid {
+    @apply w-full max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8;
+  }
+  
+  .main {
+    @apply lg:col-span-2;
+    
+    .price {
+      @apply text-xl mb-6;
+      
+      span {
+        @apply text-2xl font-bold text-[#fab978];
+      }
+    }
+    
+    .description {
+      @apply mb-10;
+      
+      h2 {
+        @apply text-2xl font-bold mb-4;
+      }
+      
+      p {
+        @apply text-gray-700 leading-relaxed;
+      }
+    }
+    
+    .features {
+      @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-10;
+      
+      .feature {
+        @apply flex items-start p-4 border border-gray-200 rounded-lg;
+        
+        .icon {
+          @apply text-[#fab978] text-xl mr-4 mt-1;
+        }
+        
+        h3 {
+          @apply font-semibold mb-1;
+        }
+        
+        p {
+          @apply text-gray-600;
+        }
+      }
+    }
+    
+    .includes {
+      @apply mb-10;
+      
+      h2 {
+        @apply text-2xl font-bold mb-4;
+      }
+      
+      ul {
+        @apply list-disc pl-5;
+        
+        li {
+          @apply mb-2 text-gray-700;
+        }
+      }
+    }
+  }
+  
+  .sidebar {
+    @apply lg:col-span-1;
+    
+    .bookingCard {
+      @apply bg-white shadow-lg rounded-lg p-6 sticky top-4;
+      
+      h3 {
+        @apply text-xl font-bold mb-4;
+      }
+      
+      .bookingPrice {
+        @apply text-2xl font-bold text-[#fab978] mb-4;
+        
+        span {
+          @apply text-sm text-gray-600 font-normal;
+        }
+      }
+      
+      .bookingForm {
+        @apply space-y-4;
+        
+        .formGroup {
+          @apply flex flex-col;
+          
+          label {
+            @apply text-sm font-medium mb-1;
+          }
+          
+          input, select {
+            @apply border border-gray-300 rounded-md p-2;
+          }
+        }
+        
+        .bookNow {
+          @apply w-full bg-[#fab978] hover:bg-[#f19f4e] text-white font-medium py-2 px-4 
+            rounded-md transition duration-300 mt-4;
+        }
+      }
+    }
+  }
+}
+
+// Skeleton styles
+.skeleton {
+  @apply bg-gray-200;
+}
+
+.skeletonTitle {
+  @apply h-10 w-3/4 rounded-md bg-gray-300 mb-4;
+}
+
+.skeletonRating {
+  @apply h-6 w-16 rounded-md bg-gray-300 mb-2;
+}
+
+.skeletonHeading {
+  @apply h-8 w-1/2 rounded-md bg-gray-300 mb-4;
+}
+
+.skeletonText {
+  @apply h-4 w-full rounded-md bg-gray-300 mb-3;
+}
+
+.skeletonSmallText {
+  @apply h-3 w-24 rounded-md bg-gray-300 mb-2;
+}
+
+.skeletonIcon {
+  @apply h-6 w-6 rounded-full bg-gray-300 mr-4 mt-1;
+}
+
+.skeletonInput {
+  @apply h-10 w-full rounded-md bg-gray-300 mt-1;
+}
+
+.skeletonButton {
+  @apply h-10 w-full rounded-md bg-gray-300 mt-4;
+}
+
+// Pulse animation
+.pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+  @apply relative overflow-hidden;
+
+  &::after {
+    content: "";
+    @apply absolute inset-0;
+    animation: shimmer 2s infinite;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

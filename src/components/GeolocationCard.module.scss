@@ -1,0 +1,11 @@
+.geolocationCard {
+  @apply bg-white rounded-lg shadow-md p-5 my-4 w-full max-w-md mx-auto;
+  
+  h2 {
+    @apply text-2xl font-bold mb-4 text-[#fab978];
+  }
+  
+  p {
+    @apply text-gray-700 text-lg mb-2;
+  }
+}
