@@ -14,7 +14,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'Logo.png'],
+      includeAssets: ['favicon.ico', 'robots.txt', 'Logo.png', 'firebase-messaging-sw.js'], // Add Firebase SW to assets
       manifest: {
         name: 'Sunset Tour',
         short_name: 'Sunset Tour',
@@ -54,7 +54,7 @@ export default defineConfig({
       devOptions: {
         enabled: true,
         type: 'module',
-        navigateFallback: 'index.html'
+        navigateFallback: 'index.html',
       },
       // Configure workbox to handle caching strategies
       workbox: {
@@ -66,6 +66,8 @@ export default defineConfig({
         // Force update on page reload
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg}'],
+        // Add this to prevent workbox from handling FCM worker requests
+        navigateFallbackDenylist: [/^\/(api|firebase-messaging-sw\.js)/], 
         // Custom runtime caching configuration
         runtimeCaching: [
           {

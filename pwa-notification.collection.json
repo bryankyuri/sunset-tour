@@ -1,0 +1,105 @@
+{
+  "info": {
+    "_postman_id": "6f8e2c8b-5c31-40c8-8f91-b3b21fb698a9",
+    "name": "Firebase Cloud Messaging (FCM)",
+    "description": "Collection for sending push notifications via Firebase Cloud Messaging",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Send FCM Notification to All Users",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{fcm_access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": {\n        \"topic\": \"all-users\",\n        \"notification\": {\n            \"title\": \"Message to Everyone\",\n            \"body\": \"This notification goes to all app users\"\n        },\n        \"data\": {\n            \"url\": \"/announcement\",\n            \"type\": \"broadcast\"\n        }\n    }\n}"
+        },
+        "url": {
+          "raw": "https://fcm.googleapis.com/v1/projects/{{project_id}}/messages:send",
+          "protocol": "https",
+          "host": [
+            "fcm",
+            "googleapis",
+            "com"
+          ],
+          "path": [
+            "v1",
+            "projects",
+            "{{project_id}}",
+            "messages:send"
+          ]
+        },
+        "description": "Send a push notification to all devices subscribed to the all-users topic"
+      },
+      "response": []
+    },
+    {
+      "name": "Send FCM Notification to Single Device",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{fcm_access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": {\n        \"token\": \"{{device_token}}\",\n        \"notification\": {\n            \"title\": \"Hello there!\",\n            \"body\": \"This notification is just for your device\"\n        },\n        \"data\": {\n            \"url\": \"/profile\",\n            \"type\": \"personal\"\n        }\n    }\n}"
+        },
+        "url": {
+          "raw": "https://fcm.googleapis.com/v1/projects/{{project_id}}/messages:send",
+          "protocol": "https",
+          "host": [
+            "fcm",
+            "googleapis",
+            "com"
+          ],
+          "path": [
+            "v1",
+            "projects",
+            "{{project_id}}",
+            "messages:send"
+          ]
+        },
+        "description": "Send a push notification to a specific device"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "project_id",
+      "value": "YOUR_FIREBASE_PROJECT_ID",
+      "type": "string"
+    },
+    {
+      "key": "fcm_access_token",
+      "value": "YOUR_FCM_ACCESS_TOKEN",
+      "type": "string"
+    },
+    {
+      "key": "device_token",
+      "value": "YOUR_DEVICE_FCM_TOKEN",
+      "type": "string"
+    }
+  ]
+}
