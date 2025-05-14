@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import NetworkToast from './components/NetworkToast';
 import MiniInfobar from './components/MiniInfobar';
 import InstallButton from './components/InstallButton';
+import DevTools from './components/DevTools';
 import { PwaInstallProvider } from './contexts/PwaInstallContext';
 import styles from './App.module.scss';
 import './index.css';
@@ -44,6 +45,7 @@ function App() {
           <Footer />
           <NetworkToast />
           <MiniInfobar />
+          <DevTools />
         </div>
       </Router>
     </PwaInstallProvider>

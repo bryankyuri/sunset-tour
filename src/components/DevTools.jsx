@@ -1,40 +1,117 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import './DevTools.css';
 
-const DevTools = () => {
-  const clearCacheAndReload = () => {
-    if ('caches' in window) {
-      // Clear all caches
-      caches.keys().then(names => {
-        names.forEach(name => {
-          caches.delete(name);
-        });
-      });
+function DevTools() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [deviceId, setDeviceId] = useState('Loading...');
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Function to get the current FCM token
+  const updateDeviceId = async () => {
+    try {
+      // Try different storage locations where the FCM token might be stored
+      let token = localStorage.getItem('fcmToken') || 
+                  localStorage.getItem('fcm_token') || 
+                  sessionStorage.getItem('fcmToken');
+      
+      // If we find a token, use it
+      if (token) {
+        setDeviceId(token);
+        return;
+      }
+      
+      // If the token is stored in indexedDB
+      if ('indexedDB' in window) {
+        // This is a simplified approach - you might need to adjust based on your DB structure
+        try {
+          const db = await new Promise((resolve, reject) => {
+            const request = indexedDB.open('firebaseLocalStorageDb');
+            request.onerror = reject;
+            request.onsuccess = () => resolve(request.result);
+          });
+          
+          const transaction = db.transaction(['firebaseLocalStorage'], 'readonly');
+          const store = transaction.objectStore('firebaseLocalStorage');
+          const allRecords = await new Promise((resolve) => {
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+          });
+          
+          // Find FCM token in stored data
+          const fcmTokenObj = allRecords.find(item => 
+            item.value && typeof item.value === 'object' && item.value.token);
+          
+          if (fcmTokenObj?.value?.token) {
+            setDeviceId(fcmTokenObj.value.token);
+            return;
+          }
+        } catch (err) {
+          console.log('IndexedDB error:', err);
+        }
+      }
+      
+      setDeviceId('Device ID not found - Check application storage');
+    } catch (error) {
+      console.error('Error getting device ID:', error);
+      setDeviceId('Error retrieving device ID');
     }
-    window.location.reload(true);
   };
-  
-  // Only show in development mode
-  if (import.meta.env.DEV) {
-    return (
-      <div style={{position: 'fixed', bottom: '10px', right: '10px', zIndex: 9999}}>
-        <button 
-          onClick={clearCacheAndReload}
-          style={{
-            background: '#ff4757',
-            color: 'white',
-            border: 'none',
-            padding: '8px 12px',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Clear Cache & Refresh
-        </button>
-      </div>
-    );
-  }
-  
-  return null;
-};
+
+  useEffect(() => {
+    updateDeviceId();
+    
+    // Set up listener for storage changes
+    const handleStorageChange = () => updateDeviceId();
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [refreshKey]);
+
+  return (
+    <>
+      <button 
+        className="devtools-button scale-75"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Developer Tools"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+      </button>
+      
+      {isOpen && (
+        <div className="devtools-popup">
+          <div className="devtools-popup-header">
+            <h3>DevTools</h3>
+            <button onClick={() => setIsOpen(false)}>×</button>
+          </div>
+          <div className="devtools-popup-content">
+            <h4>Device ID (FCM Token)</h4>
+            <div className="device-id-container">
+              <p className="device-id">{deviceId}</p>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(deviceId);
+                  alert('Device ID copied to clipboard!');
+                }}
+              >
+                Copy
+              </button>
+            </div>
+            <button 
+              className="refresh-button" 
+              onClick={() => setRefreshKey(prev => prev + 1)}
+            >
+              Refresh
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 export default DevTools;

@@ -1,0 +1,96 @@
+.devtools-button {
+  position: fixed;
+  bottom: 80px;
+  right: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #333;
+  color: white;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s;
+}
+
+.devtools-button:hover {
+  transform: scale(1.1);
+}
+
+.devtools-popup {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+}
+
+.devtools-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.devtools-popup-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.devtools-popup-header button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+.devtools-popup-content {
+  padding: 15px;
+}
+
+.devtools-popup-content h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.device-id-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.device-id {
+  font-family: monospace;
+  background-color: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  overflow-x: auto;
+  margin: 0;
+  flex: 1;
+  word-break: break-all;
+}
+
+.device-id-container button {
+  padding: 8px 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.device-id-container button:hover {
+  background-color: #45a049;
+}
