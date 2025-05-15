@@ -7,7 +7,64 @@
   },
   "item": [
     {
+      "name": "Get FCM Access Token",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{token_api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/get-fcm-token",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "get-fcm-token"
+          ]
+        },
+        "description": "Get a fresh FCM access token for API calls"
+      },
+      "response": []
+    },
+    {
       "name": "Send FCM Notification to All Users",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Auto-refresh the FCM access token before sending notification",
+              "pm.sendRequest({",
+              "    url: pm.variables.get('base_url') + '/api/get-fcm-token',",
+              "    method: 'GET',",
+              "    header: {",
+              "        'x-api-key': pm.variables.get('token_api_key')",
+              "    }",
+              "}, function (err, res) {",
+              "    if (err) {",
+              "        console.error('Error refreshing token:', err);",
+              "    } else if (res.code === 200) {",
+              "        const responseJson = res.json();",
+              "        if (responseJson.access_token) {",
+              "            pm.environment.set('fcm_access_token', responseJson.access_token);",
+              "            console.log('Token refreshed, expires at:', responseJson.expires_at);",
+              "        } else {",
+              "            console.error('No token in response');",
+              "        }",
+              "    } else {",
+              "        console.error('Token refresh failed:', res.status);",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -47,6 +104,38 @@
     },
     {
       "name": "Send FCM Notification to Single Device",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Auto-refresh the FCM access token before sending notification",
+              "pm.sendRequest({",
+              "    url: pm.variables.get('base_url') + '/api/get-fcm-token',",
+              "    method: 'GET',",
+              "    header: {",
+              "        'x-api-key': pm.variables.get('token_api_key')",
+              "    }",
+              "}, function (err, res) {",
+              "    if (err) {",
+              "        console.error('Error refreshing token:', err);",
+              "    } else if (res.code === 200) {",
+              "        const responseJson = res.json();",
+              "        if (responseJson.access_token) {",
+              "            pm.environment.set('fcm_access_token', responseJson.access_token);",
+              "            console.log('Token refreshed, expires at:', responseJson.expires_at);",
+              "        } else {",
+              "            console.error('No token in response');",
+              "        }",
+              "    } else {",
+              "        console.error('Token refresh failed:', res.status);",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -100,6 +189,18 @@
       "key": "device_token",
       "value": "YOUR_DEVICE_FCM_TOKEN",
       "type": "string"
+    },
+    {
+      "key": "base_url",
+      "value": "https://your-app.vercel.app",
+      "type": "string",
+      "description": "Your Vercel deployment URL"
+    },
+    {
+      "key": "token_api_key",
+      "value": "YOUR_TOKEN_API_SECRET",
+      "type": "string",
+      "description": "Secret key for token API authentication"
     }
   ]
 }
