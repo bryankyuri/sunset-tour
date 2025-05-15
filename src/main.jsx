@@ -19,7 +19,10 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/serviceWorker.js")
       .then((registration) => {
-        console.log("Service Worker registered with scope:", registration.scope);
+        console.log(
+          "Service Worker registered with scope:",
+          registration.scope
+        );
       })
       .catch((error) => {
         console.error("Service Worker registration failed:", error);
@@ -33,8 +36,4 @@ if (!rootElement) {
   throw new Error("Failed to find the root element");
 }
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+ReactDOM.createRoot(rootElement).render(<App />);
