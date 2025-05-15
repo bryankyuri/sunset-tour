@@ -1,5 +1,11 @@
 .header {
-  @apply py-6 bg-white text-black ;
-
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
